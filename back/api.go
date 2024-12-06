@@ -22,7 +22,6 @@ func newApiServer(port string, storage Storage) *APIServer {
 }
 
 func (s *APIServer) Run() {
-
 	http.HandleFunc("/items", s.handleListarItems)
 	http.HandleFunc("/items", s.handleCriaItems)
 	http.HandleFunc("/items/{id}", s.handleGetItem)
