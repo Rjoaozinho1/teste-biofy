@@ -2,12 +2,14 @@ package main
 
 import (
 	"database/sql"
+
+	_ "github.com/lib/pq"
 )
 
 type Storage interface {
 	CreateItem(item Item) error
 	GetItem(id string) (Item, error)
-	GetAllItems() ([]Item, error)
+	GetAllItens() ([]Item, error)
 	UpdateItem(id string, item Item) error
 	DeleteItem(id string) error
 }
@@ -16,8 +18,8 @@ type PostgresStore struct {
 	db *sql.DB
 }
 
-func newStorageConnection() (*PostgresStore, error) {
-	connStr := "user=user dbname=dbname password=password sslmode=disable"
+func NewStorageConnection() (*PostgresStore, error) {
+	connStr := "user=joao-pedro dbname=db password=123 sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
@@ -31,11 +33,11 @@ func newStorageConnection() (*PostgresStore, error) {
 }
 
 func (s *PostgresStore) Init() error {
-	return s.CriaTabelaItems()
+	return s.CriaTabelaitens()
 }
 
-func (s *PostgresStore) CriaTabelaItems() error {
-	query := `CREATE TABLE if not exists items (
+func (s *PostgresStore) CriaTabelaitens() error {
+	query := `CREATE TABLE if not exists itens (
 		session_id UUID PRIMARY KEY,
 		nome VARCHAR(100) NOT NULL,
 		mensagem TEXT NOT NULL,
@@ -49,7 +51,7 @@ func (s *PostgresStore) CriaTabelaItems() error {
 }
 
 func (s *PostgresStore) CreateItem(item Item) error {
-	query := `INSERT INTO items (nome, session_id, mensagem, created_at) VALUES ($1, $2, $3, $4);`
+	query := `INSERT INTO itens (nome, session_id, mensagem, created_at) VALUES ($1, $2, $3, $4);`
 	_, err := s.db.Exec(
 		query,
 		item.Nome,
@@ -64,7 +66,7 @@ func (s *PostgresStore) CreateItem(item Item) error {
 }
 
 func (s *PostgresStore) GetItem(id string) (Item, error) {
-	query := `SELECT nome, session_id, mensagem, created_at FROM items WHERE session_id = $1;`
+	query := `SELECT nome, session_id, mensagem, created_at FROM itens WHERE session_id = $1;`
 	var item Item
 	err := s.db.QueryRow(query, id).Scan(&item.Nome, &item.SessionID, &item.Mensagem, &item.CreatedAt)
 	if err != nil {
@@ -73,15 +75,15 @@ func (s *PostgresStore) GetItem(id string) (Item, error) {
 	return item, nil
 }
 
-func (s *PostgresStore) GetAllItems() ([]Item, error) {
-	query := `SELECT nome, session_id, mensagem, created_at FROM items;`
+func (s *PostgresStore) GetAllItens() ([]Item, error) {
+	query := `SELECT nome, session_id, mensagem, created_at FROM itens;`
 	rows, err := s.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	items := []Item{}
+	itens := []Item{}
 	for rows.Next() {
 		var item Item
 		err := rows.Scan(
@@ -93,17 +95,17 @@ func (s *PostgresStore) GetAllItems() ([]Item, error) {
 		if err != nil {
 			return nil, err
 		}
-		items = append(items, item)
+		itens = append(itens, item)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return items, nil
+	return itens, nil
 }
 
 func (s *PostgresStore) UpdateItem(id string, item Item) error {
-	query := `UPDATE items SET nome = $1, mensagem = $2 WHERE session_id = $3;`
+	query := `UPDATE itens SET nome = $1, mensagem = $2 WHERE session_id = $3;`
 	_, err := s.db.Exec(
 		query,
 		item.Nome,
@@ -117,7 +119,7 @@ func (s *PostgresStore) UpdateItem(id string, item Item) error {
 }
 
 func (s *PostgresStore) DeleteItem(id string) error {
-	query := `DELETE FROM items WHERE session_id = $1;`
+	query := `DELETE FROM itens WHERE session_id = $1;`
 	_, err := s.db.Exec(
 		query,
 		id,
