@@ -14,7 +14,7 @@ type APIServer struct {
 	Storage Storage
 }
 
-func newApiServer(port string, storage Storage) *APIServer {
+func NewApiServer(port string, storage Storage) *APIServer {
 	return &APIServer{
 		Port:    port,
 		Storage: storage,
@@ -22,85 +22,107 @@ func newApiServer(port string, storage Storage) *APIServer {
 }
 
 func (s *APIServer) Run() {
-	http.HandleFunc("/items", s.handleListarItems)
-	http.HandleFunc("/items", s.handleCriaItems)
-	http.HandleFunc("/items/{id}", s.handleGetItem)
-	http.HandleFunc("/items/{id}", s.handleAtualizaItem)
-	http.HandleFunc("/items/{id}", s.handleDeletaItem)
+	mux := http.NewServeMux()
 
-	if err := http.ListenAndServe(s.Port, nil); err != nil {
+	mux.HandleFunc("/itens", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			s.handleListaritens(w, r)
+		case "POST":
+			s.handleCriaitens(w, r)
+		default:
+			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
+		}
+	})
+	mux.HandleFunc("/itens/", func(w http.ResponseWriter, r *http.Request) {
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			http.Error(w, "Campo id necessario", http.StatusBadRequest)
+			return
+		}
+		switch r.Method {
+		case "GET":
+			s.handleGetItem(w, r, id)
+		case "PUT":
+			s.handleAtualizaItem(w, r, id)
+		case "DELETE":
+			s.handleDeletaItem(w, r, id)
+		default:
+			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
+		}
+	})
+
+	mux.HandleFunc("/usuario", s.handleCriaUsuario)
+	mux.HandleFunc("/login", s.handleLogarUsuario)
+
+	log.Printf("Servidor iniciado na porta %s...", s.Port)
+	if err := http.ListenAndServe(s.Port, mux); err != nil {
 		log.Fatal("Erro ao iniciar o servidor:", err)
 	}
-	log.Printf("Servidor iniciado na porta %s...", s.Port)
 }
 
-func (s *APIServer) handleCriaItems(w http.ResponseWriter, r *http.Request) {
+func (s *APIServer) handleCriaitens(w http.ResponseWriter, r *http.Request) {
 	var item Item
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		http.Error(w, "Corpo Invalido", http.StatusBadRequest)
 		return
 	}
-
+	if item.Nome == "" || item.Mensagem <= "" {
+		http.Error(w, "Campo de nome e mensagem são obrigatorios", http.StatusBadRequest)
+		return
+	}
 	item.SessionID = uuid.New()
 	item.CreatedAt = time.Now()
-
 	if err := s.Storage.CreateItem(item); err != nil {
 		http.Error(w, "Erro ao criar o item", http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(item)
 }
 
-func (s *APIServer) handleListarItems(w http.ResponseWriter, r *http.Request) {
-	items, err := s.Storage.GetAllItems()
+func (s *APIServer) handleListaritens(w http.ResponseWriter, _ *http.Request) {
+	itens, err := s.Storage.GetAllItens()
 	if err != nil {
-		http.Error(w, "Erro ao trazer todos os items", http.StatusInternalServerError)
+		http.Error(w, "Erro ao trazer todos os itens", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(items)
+	json.NewEncoder(w).Encode(itens)
 }
 
-func (s *APIServer) handleGetItem(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
-
+func (s *APIServer) handleGetItem(w http.ResponseWriter, _ *http.Request, id string) {
 	item, err := s.Storage.GetItem(id)
 	if err != nil {
 		http.Error(w, "Item não encontrado", http.StatusNotFound)
 		return
 	}
-
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(item)
 }
 
-func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
-
+func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, id string) {
 	var item Item
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		http.Error(w, "Corpo Invalido", http.StatusBadRequest)
 		return
 	}
-
 	if err := s.Storage.UpdateItem(id, item); err != nil {
 		http.Error(w, "Erro ao atualizar o item", http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(item)
 }
 
-func (s *APIServer) handleDeletaItem(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
-
+func (s *APIServer) handleDeletaItem(w http.ResponseWriter, _ *http.Request, id string) {
 	if err := s.Storage.DeleteItem(id); err != nil {
 		http.Error(w, "Erro ao excluir o item", http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (s *APIServer) handleLogarUsuario(w http.ResponseWriter, r *http.Request) {}
+
+func (s *APIServer) handleCriaUsuario(w http.ResponseWriter, r *http.Request) {}
