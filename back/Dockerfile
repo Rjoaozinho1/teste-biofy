@@ -1,5 +1,5 @@
 # Etapa de build
-FROM golang:1.23.1-alpine3.18 AS builder
+FROM golang:1.23-alpine AS builder
 
 # Definir diretório de trabalho
 WORKDIR /app

@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: go-app
-    ports:
-      - "2026:2026"
-    depends_on:
-      - postgres
-    restart: always
-
   postgres:
     image: postgres:16
     container_name: postgres
@@ -24,10 +13,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data:
 
 networks:
-  default:
+  mynetwork:
     driver: bridge
