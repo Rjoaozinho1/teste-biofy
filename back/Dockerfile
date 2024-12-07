@@ -1,5 +1,5 @@
 # Etapa de build
-FROM golang:1.23.1-alpine AS builder
+FROM golang:1.23.1-alpine3.18 AS builder
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -17,13 +17,19 @@ COPY . .
 RUN go build -o myapp .
 
 # Etapa final - execução
-FROM alpine:latest
+FROM alpine:3.18
+
+# Criar um usuário não-root para rodar a aplicação
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Definir diretório de trabalho
 WORKDIR /app
 
 # Copiar o binário da etapa anterior
 COPY --from=builder /app/myapp .
+
+# Alterar para o usuário não-root
+USER appuser
 
 # Expor a porta que a aplicação usa
 EXPOSE 2026
