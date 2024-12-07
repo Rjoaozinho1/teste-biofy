@@ -108,6 +108,10 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 		http.Error(w, "Corpo Invalido", http.StatusBadRequest)
 		return
 	}
+	if item.Nome == "" || item.Mensagem <= "" {
+		http.Error(w, "Campo de nome e mensagem são obrigatorios", http.StatusBadRequest)
+		return
+	}
 	if err := s.Storage.UpdateItem(id, item); err != nil {
 		http.Error(w, "Erro ao atualizar o item", http.StatusInternalServerError)
 		return
