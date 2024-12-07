@@ -35,7 +35,8 @@ func (s *APIServer) Run() {
 		}
 	})
 	mux.HandleFunc("/itens/", func(w http.ResponseWriter, r *http.Request) {
-		id := r.URL.Query().Get("id")
+		id := r.URL.Path[len("/itens/"):]
+		log.Println(id)
 		if id == "" {
 			http.Error(w, "Campo id necessario", http.StatusBadRequest)
 			return
@@ -109,6 +110,11 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 	}
 	if err := s.Storage.UpdateItem(id, item); err != nil {
 		http.Error(w, "Erro ao atualizar o item", http.StatusInternalServerError)
+		return
+	}
+	item, err := s.Storage.GetItem(id)
+	if err != nil {
+		http.Error(w, "Erro ao recuperar o item atualizado", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
