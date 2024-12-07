@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secret = []byte("secrect-key")
+var secret = []byte("uBF8KO3Dmw6yjyyxg7ERrwA28yv3/RWnOVMzWrtcfi8rAoUYU9hytr+lrlux92axOOAWsYG+EFot04V6vCnyEA==")
 
 var validUser = map[string]string{
 	"123@teste.com": "123",
