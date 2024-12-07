@@ -24,7 +24,7 @@ func NewApiServer(port string, storage Storage) *APIServer {
 func (s *APIServer) Run() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/itens", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/itens", ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			s.handleListaritens(w, r)
@@ -33,8 +33,8 @@ func (s *APIServer) Run() {
 		default:
 			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
 		}
-	})
-	mux.HandleFunc("/itens/", func(w http.ResponseWriter, r *http.Request) {
+	}))
+	mux.HandleFunc("/itens/", ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Path[len("/itens/"):]
 		log.Println(id)
 		if id == "" {
@@ -51,10 +51,13 @@ func (s *APIServer) Run() {
 		default:
 			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
 		}
+	}))
+	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
+		}
+		s.handleLogin(w, r)
 	})
-
-	mux.HandleFunc("/usuario", s.handleCriaUsuario)
-	mux.HandleFunc("/login", s.handleLogarUsuario)
 
 	log.Printf("Servidor iniciado na porta %s...", s.Port)
 	if err := http.ListenAndServe(s.Port, mux); err != nil {
@@ -79,6 +82,7 @@ func (s *APIServer) handleCriaitens(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
+	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(item)
 }
 
@@ -89,6 +93,7 @@ func (s *APIServer) handleListaritens(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(itens)
 }
 
@@ -99,6 +104,7 @@ func (s *APIServer) handleGetItem(w http.ResponseWriter, _ *http.Request, id str
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(item)
 }
 
@@ -122,6 +128,7 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(item)
 }
 
@@ -133,6 +140,19 @@ func (s *APIServer) handleDeletaItem(w http.ResponseWriter, _ *http.Request, id 
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (s *APIServer) handleLogarUsuario(w http.ResponseWriter, r *http.Request) {}
-
-func (s *APIServer) handleCriaUsuario(w http.ResponseWriter, r *http.Request) {}
+func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) {
+	var req ReqLogin
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Corpo Invalido", http.StatusBadRequest)
+		return
+	}
+	token, err := CriaJWTToken(&req)
+	if err != nil {
+		http.Error(w, "Credenciais inválidas", http.StatusInternalServerError)
+		return
+	}
+	resp := ResLogin{token}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
