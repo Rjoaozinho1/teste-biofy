@@ -105,7 +105,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Item"
+                "$ref": "#/components/schemas/Item2"
               }
             }
           },
@@ -213,7 +213,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Item"
+                "$ref": "#/components/schemas/Item2"
               }
             }
           },
@@ -351,6 +351,23 @@
           "error": {
             "type": "string",
             "example": "mensagem de erro"
+          }
+        }
+      },
+      "Item2": {
+        "required": [
+          "mensagem",
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Mochila"
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Mochila incrível para carregar suas coisas"
           }
         }
       }
