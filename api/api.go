@@ -60,7 +60,7 @@ func (s *APIServer) Run() {
 		}
 		s.handleLogin(w, r)
 	})
-	mux.Handle("/", http.FileServer(http.Dir("./public")))
+	mux.Handle("/", http.FileServer(http.Dir("../app/public")))
 
 	log.Printf("Servidor iniciado na porta %s...", s.Port)
 	if err := http.ListenAndServe(s.Port, mux); err != nil {
