@@ -7,11 +7,17 @@ O projeto teste-biofy é uma API CRUD desenvolvida com foco no padrão de arquit
 As tecnologias utilizadas para o desenvolvimento do projeto incluem:
 
 Go: Linguagem de programação principal para o back-end.
+
 HTML, CSS, JS: Tecnologias principais para o front-end.
+
 PostgreSQL: Banco de dados relacional.
+
 Mux: Biblioteca de roteamento para Go.
+
 JWT (JSON Web Token): Para autenticação de usuários.
+
 Docker: Para containerização e setup do ambiente.
+
 Swagger: Ferramentas para documentação da API.
 
 ## Setup e Execução
