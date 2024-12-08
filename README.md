@@ -60,8 +60,8 @@ curl -X POST http://localhost:2026/itens \
 ```
 ### Atualizar Item
 Endpoint: PUT /itens/{id}
-```sh
 Exemplo de cURL:
+```sh
 curl -X PUT http://localhost:2026/itens/uuid \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
@@ -72,15 +72,15 @@ curl -X PUT http://localhost:2026/itens/uuid \
 ```
 ### Obter Item por ID
 Endpoint: GET /itens/{id}
-```sh
 Exemplo de cURL:
+```sh
 curl -X GET http://localhost:2026/itens/uuid
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
 ### Deletar Item
 Endpoint: DELETE /itens/{id}
-```sh
 Exemplo de cURL:
+```sh
 curl -X DELETE http://localhost:2026/itens/uuid
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
