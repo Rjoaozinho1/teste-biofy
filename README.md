@@ -1,9 +1,9 @@
 # teste-biofy
 
-## 📝 Descrição Geral
+## Descrição Geral
 O projeto teste-biofy é uma API CRUD desenvolvida com foco no padrão de arquitetura RESTful. Seu objetivo principal é permitir as operações básicas de Criar, Listar, Atualizar e Deletar itens de um banco de dados relacional PostgreSQL.
 
-## 🛠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 As tecnologias utilizadas para o desenvolvimento do projeto incluem:
 
 Go: Linguagem de programação principal para o back-end.
@@ -14,7 +14,7 @@ JWT (JSON Web Token): Para autenticação de usuários.
 Docker: Para containerização e setup do ambiente.
 Swagger: Ferramentas para documentação da API.
 
-## 🚀 Setup e Execução
+## Setup e Execução
 Siga os passos abaixo para executar o projeto localmente:
 
 Pré-requisitos
@@ -64,7 +64,7 @@ Entre com esse usuario para teste:
 `Email: 123@teste.com`
 `Senha: 123`
 
-## 📌 Exemplos de Uso dos Endpoints
+## Exemplos de Uso dos Endpoints
 
 ### Criar Item
 Endpoint: POST /itens
