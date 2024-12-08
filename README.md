@@ -52,6 +52,7 @@ Exemplo de cURL:
 ```sh
 curl -X POST http://localhost:2026/itens \
 -H "Content-Type: application/json" \
+-H "Authorization: Bearer SEU_TOKEN_AQUI" \
 -d '{
   "nome": "Novo Item",
   "mensagem": "Este é um exemplo"
@@ -63,6 +64,7 @@ Endpoint: PUT /itens/{id}
 Exemplo de cURL:
 curl -X PUT http://localhost:2026/itens/uuid \
 -H "Content-Type: application/json" \
+-H "Authorization: Bearer SEU_TOKEN_AQUI" \
 -d '{
   "nome": "Item Atualizado",
   "mensagem": "Conteúdo atualizado"
@@ -73,12 +75,14 @@ Endpoint: GET /itens/{id}
 ```sh
 Exemplo de cURL:
 curl -X GET http://localhost:2026/itens/uuid
+-H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
 ### Deletar Item
 Endpoint: DELETE /itens/{id}
 ```sh
 Exemplo de cURL:
 curl -X DELETE http://localhost:2026/itens/uuid
+-H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
 ## 🛡 Documentação da API
 A documentação detalhada da API pode ser encontrada nos seguintes formatos:
