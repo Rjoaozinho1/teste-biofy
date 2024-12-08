@@ -10,11 +10,11 @@ COPY go.mod go.sum ./
 # Baixar as dependências
 RUN go mod download
 
-# Copiar o código-fonte para o contêiner
+# Copiar todo o código-fonte para o contêiner
 COPY . .
 
-# Compilar o binário
-RUN go build -o myapp .
+# Compilar o binário a partir do subdiretório cmd
+RUN go build -o myapp ./cmd
 
 # Etapa final - execução
 FROM alpine:3.18
@@ -27,6 +27,9 @@ WORKDIR /app
 
 # Copiar o binário da etapa anterior
 COPY --from=builder /app/myapp .
+
+# Copiar o diretório 'public' para o contêiner
+COPY --from=builder /app/public /app/public
 
 # Alterar para o usuário não-root
 USER appuser
