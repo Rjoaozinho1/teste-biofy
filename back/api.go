@@ -36,9 +36,8 @@ func (s *APIServer) Run() {
 	}))
 	mux.HandleFunc("/itens/", ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Path[len("/itens/"):]
-		log.Println(id)
 		if id == "" {
-			http.Error(w, "Campo id necessario", http.StatusBadRequest)
+			http.Error(w, "ID necessario", http.StatusBadRequest)
 			return
 		}
 		switch r.Method {
@@ -118,7 +117,7 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 		http.Error(w, "Corpo Invalido", http.StatusBadRequest)
 		return
 	}
-	if item.Nome == "" || item.Mensagem <= "" {
+	if item.Nome == "" || item.Mensagem == "" {
 		http.Error(w, "Campo de nome e mensagem são obrigatorios", http.StatusBadRequest)
 		return
 	}
