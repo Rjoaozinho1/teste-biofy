@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_app
+    ports:
+      - "2026:2026"
+    networks:
+      - mynetwork
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: joao-pedro
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - mynetwork
+
+volumes:
+  postgres_data:
+
+networks:
+  mynetwork:
+    driver: bridge
