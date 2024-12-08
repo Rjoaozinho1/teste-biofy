@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Itens</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+</head>
+
+<body>
+    <h1>CRUD de Itens</h1>
+
+    <button onclick="logout()">Logout</button>
+    <a href="./doc.html"><button>Documentação</button></a>
+
+    <form id="createForm" hx-post="/itens" hx-target="#itemCriado" hx-ext="json-enc" hx-trigger="submit">
+        <h2>Criar Item</h2>
+        <label>
+            Nome:
+            <input type="text" name="nome" required>
+        </label>
+        <br>
+        <label>
+            Mensagem:
+            <input type="text" name="mensagem" required>
+        </label>
+        <br>
+        <button type="submit">Criar</button>
+        <div id="itemCriado"></div>
+    </form>
+
+    <div>
+        <h2>Itens</h2>
+        <button hx-get="/itens" hx-target="#itensListador" hx-swap="innerHTML">Listar Todos</button>
+        <div id="itensListador"></div>
+    </div>
+
+    <form id="getForm" hx-get="/itens/" hx-target="#itemDetalhe" hx-trigger="submit">
+        <h2>Detalhe Item</h2>
+        <label>
+            ID do Item:
+            <input type="text" name="id" required>
+        </label>
+        <button type="submit">Buscar</button>
+        <div id="itemDetalhe" style="margin-top: 20px"></div>
+    </form>
+
+    <form id="updateForm" hx-put="/itens/" hx-target="#itemAtualizado" hx-ext="json-enc" hx-trigger="submit">
+        <h2>Atualizar Item</h2>
+        <label>
+            ID do Item:
+            <input type="text" name="id" required>
+        </label>
+        <br>
+        <label>
+            Nome:
+            <input type="text" name="nome">
+        </label>
+        <br>
+        <label>
+            Mensagem:
+            <input type="text" name="mensagem">
+        </label>
+        <br>
+        <button type="submit">Atualizar</button>
+        <div id="itemAtualizado"></div>
+    </form>
+
+    <form id="deleteForm" hx-delete="/itens/" hx-target="#itemDeletado" hx-trigger="submit">
+        <h2>Deletar Item</h2>
+        <label>
+            ID do Item:
+            <input type="text" name="id" required>
+        </label>
+        <button type="submit">Deletar</button>
+        <div id="itemDeletado"></div>
+    </form>
+
+    <script>
+        let timeoutId
+        const inatividadeLimite = 5 * 60 * 1000
+
+        function logout() {
+            localStorage.removeItem('authToken')
+            window.location.href = '/index.html'
+        }
+
+        function resetInatividade() {
+            clearTimeout(timeoutId)
+            timeoutId = setTimeout(logout, inatividadeLimite)
+        }
+
+        function iniciarMonitoramentoInatividade() {
+            const eventos = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
+            eventos.forEach(evento => {
+                document.addEventListener(evento, resetInatividade)
+            })
+            resetInatividade()
+        }
+
+        window.onload = function () {
+            const token = localStorage.getItem('authToken')
+            if (!token) {
+                logout()
+            } else {
+                iniciarMonitoramentoInatividade()
+            }
+        }
+
+        document.body.addEventListener("htmx:configRequest", function (evento) {
+            if (evento.detail.path.startsWith("/itens")) {
+                const token = localStorage.getItem('authToken')
+                if (token) {
+                    evento.detail.headers['Authorization'] = `Bearer ${token}`
+                    resetInatividade()
+                } else {
+                    logout()
+                }
+            }
+        })
+
+        document.body.addEventListener('htmx:responseError', function (evento) {
+            if (evento.detail.xhr.status === 401) {
+                logout()
+            }
+        })
+    </script>
+
+</body>
+
+</html>
