@@ -4,13 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/htmx.org"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <title>Login</title>
 </head>
 
 <body>
-    <form id="loginForm" hx-post="/login" hx-ext="json-enc" hx-trigger="submit">
+    <form id="loginForm">
         <h2>Login</h2>
         <label>
             Email:
@@ -26,19 +24,34 @@
     </form>
 
     <script>
-        var token = null;
-        document.body.addEventListener("htmx:afterRequest", function (evento) {
-            if (evento.detail.requestConfig.path === "/login" && evento.detail.xhr.status === 200) {
-                const response = JSON.parse(evento.detail.xhr.responseText);
-                token = response.token;
-                localStorage.setItem('authToken', token);
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const email = event.target.email.value;
+            const senha = event.target.senha.value;
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, senha })
+                });
+                if (!response.ok) {
+                    alert("Erro ao fazer login. Verifique suas credenciais.");
+                    return;
+                }
+                const data = await response.json();
+                localStorage.setItem('authToken', data.token);
                 window.location.href = '/home.html';
+            } catch (error) {
+                console.error("Erro ao fazer login:", error);
+                alert("Ocorreu um erro. Tente novamente mais tarde.");
             }
         });
         window.onload = function () {
-            const savedToken = localStorage.getItem('authToken');
-            if (savedToken) {
-                token = savedToken;
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                window.location.href = '/home.html';
             }
         }
     </script>
