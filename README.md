@@ -50,7 +50,6 @@ Entre com esse usuario para teste:
 `Senha: 123`
 
 ## 📌 Exemplos de Uso dos Endpoints
-Aqui estão alguns exemplos para testar os principais endpoints da API:
 
 ### Criar Item
 Endpoint: POST /itens
