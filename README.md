@@ -29,15 +29,9 @@ git clone git@github.com:Rjoaozinho1/teste-biofy.git
 cd teste-biofy
 ```
 
-Suba o container do PostgreSQL dentro da pasta back/:
+Suba o container da aplicação:
 ```sh
-docker-compose up -d
-```
-
-Faça o build do projeto back-end e execute-o:
-```sh
-go build -o app
-./app
+docker compose up --build
 ```
 
 Vá a seu navegador e digite essa url:
