@@ -18,8 +18,30 @@ Swagger: Ferramentas para documentação da API.
 Siga os passos abaixo para executar o projeto localmente:
 
 Pré-requisitos
-- Go (versão 1.20 ou superior)
 - Docker
+- Docker Compose
+
+Instrução para instalação do Docker:
+
+### Windows and macOS
+
+Docker Compose esta incluido
+[Docker Desktop](https://www.docker.com/products/docker-desktop)
+para Windows e macOS.
+
+### Linux
+
+Pode instalar os binarios do Docker Compose 
+[release page](https://github.com/docker/compose/releases)
+
+Renomeando o binario para `docker-compose` e copiando o `$HOME/.docker/cli-plugins` 
+
+Ou copie para um desses diretorios para instalar em todo o sistema:
+
+* `/usr/local/lib/docker/cli-plugins` OU `/usr/local/libexec/docker/cli-plugins`
+* `/usr/lib/docker/cli-plugins` OU `/usr/libexec/docker/cli-plugins`
+
+Talvez seja necessario fazer o binario executavel com `chmod +x`
 
 ### Passos para configurar
 
@@ -31,7 +53,7 @@ cd teste-biofy
 
 Suba o container da aplicação:
 ```sh
-docker compose up --build
+docker-compose up --build
 ```
 
 Vá a seu navegador e digite essa url:
