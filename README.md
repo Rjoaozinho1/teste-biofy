@@ -108,7 +108,7 @@ Exemplo de cURL:
 curl -X DELETE http://localhost:2026/itens/uuid
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
-## 🛡 Documentação da API
+## Documentação da API
 A documentação detalhada da API pode ser encontrada nos seguintes formatos:
 Swagger: Swagger UI
 Para acessar a interface Swagger acesse:
