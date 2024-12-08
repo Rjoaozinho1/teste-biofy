@@ -60,6 +60,7 @@ curl -X POST http://localhost:2026/itens \
 ```
 ### Atualizar Item
 Endpoint: PUT /itens/{id}
+
 Exemplo de cURL:
 ```sh
 curl -X PUT http://localhost:2026/itens/uuid \
@@ -72,6 +73,7 @@ curl -X PUT http://localhost:2026/itens/uuid \
 ```
 ### Obter Item por ID
 Endpoint: GET /itens/{id}
+
 Exemplo de cURL:
 ```sh
 curl -X GET http://localhost:2026/itens/uuid
@@ -79,6 +81,7 @@ curl -X GET http://localhost:2026/itens/uuid
 ```
 ### Deletar Item
 Endpoint: DELETE /itens/{id}
+
 Exemplo de cURL:
 ```sh
 curl -X DELETE http://localhost:2026/itens/uuid
