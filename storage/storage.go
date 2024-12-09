@@ -35,10 +35,10 @@ func NewStorageConnection() (*PostgresStore, error) {
 }
 
 func (s *PostgresStore) Init() error {
-	return s.CriaTabelaitens()
+	return s.CriaTabelaItens()
 }
 
-func (s *PostgresStore) CriaTabelaitens() error {
+func (s *PostgresStore) CriaTabelaItens() error {
 	query := `CREATE TABLE if not exists itens (
 		session_id UUID PRIMARY KEY,
 		nome VARCHAR(100) NOT NULL,

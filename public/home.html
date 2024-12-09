@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD de Itens</title>
+    <title>CRUD de Mensagens</title>
 </head>
 
 <body>
-    <h1>CRUD de Itens</h1>
+    <h1>CRUD de Mensagens</h1>
 
     <button onclick="logout()">Logout</button>
     <a href="./doc.html"><button>Documentação</button></a>
 
     <form id="createForm" onsubmit="criarItem(event)">
-        <h2>Criar Item</h2>
+        <h2>Criar Mensagem</h2>
         <label>
             Nome:
             <input type="text" name="nome" required>
@@ -30,15 +30,15 @@
     </form>
 
     <div>
-        <h2>Itens</h2>
-        <button onclick="listarItens()">Listar Todos</button>
+        <h2>Mensagens</h2>
+        <button onclick="listarItens()">Listar Todas</button>
         <div id="itensListador"></div>
     </div>
 
     <form id="getForm" onsubmit="detalheItem(event)">
-        <h2>Detalhe Item</h2>
+        <h2>Detalhe Mensagem</h2>
         <label>
-            ID do Item:
+            ID da Mensagem:
             <input type="text" name="id" required id="detalheId">
         </label>
         <button type="submit">Buscar</button>
@@ -46,9 +46,9 @@
     </form>
 
     <form id="updateForm" onsubmit="atualizarItem(event)">
-        <h2>Atualizar Item</h2>
+        <h2>Atualizar Mensagem</h2>
         <label>
-            ID do Item:
+            ID da Mensagem:
             <input type="text" name="id" required id="atualizarId">
         </label>
         <br>
@@ -67,9 +67,9 @@
     </form>
 
     <form id="deleteForm" onsubmit="deletarItem(event)">
-        <h2>Deletar Item</h2>
+        <h2>Deletar Mensagem</h2>
         <label>
-            ID do Item:
+            ID da Mensagem:
             <input type="text" name="id" required id="deletarId">
         </label>
         <button type="submit">Deletar</button>
@@ -77,7 +77,7 @@
     </form>
 
     <script>
-        const API_URL = 'http://localhost:2026/itens'
+        const API_URL = 'http://localhost:2026/mensagem'
 
         async function tempalteRequisicao(url, opcoes = {}) {
             const token = localStorage.getItem('authToken')
@@ -123,7 +123,7 @@
 
             if (response) {
                 const resultado = await response.json()
-                document.getElementById('itemCriado').textContent = 'Item criado com sucesso!'
+                document.getElementById('itemCriado').textContent = 'Mensagem criado com sucesso!'
                 form.reset()
                 listarItens()
             }
@@ -176,7 +176,7 @@
             })
 
             if (response) {
-                document.getElementById('itemAtualizado').textContent = 'Item atualizado com sucesso!'
+                document.getElementById('itemAtualizado').textContent = 'Mensagem atualizado com sucesso!'
                 form.reset()
                 listarItens()
             }
@@ -191,7 +191,7 @@
             })
 
             if (response) {
-                document.getElementById('itemDeletado').textContent = 'Item deletado com sucesso!'
+                document.getElementById('itemDeletado').textContent = 'Mensagem deletado com sucesso!'
                 document.getElementById('deleteForm').reset()
                 listarItens()
             }

@@ -1,7 +1,7 @@
 # teste-biofy
 
 ## Descrição Geral
-O projeto teste-biofy é uma API CRUD desenvolvida com foco no padrão de arquitetura RESTful. Seu objetivo principal é permitir as operações básicas de Criar, Listar, Atualizar e Deletar itens de um banco de dados relacional PostgreSQL.
+O projeto teste-biofy é uma API CRUD desenvolvida com foco no padrão de arquitetura RESTful. Seu objetivo principal é permitir as operações básicas de Criar, Listar, Atualizar e Deletar mensagem de um banco de dados relacional PostgreSQL.
 
 ## Tecnologias Utilizadas
 As tecnologias utilizadas para o desenvolvimento do projeto incluem:
@@ -72,46 +72,46 @@ Entre com esse usuario para teste:
 
 ## Exemplos de Uso dos Endpoints
 
-### Criar Item
-Endpoint: POST /itens
+### Criar Mensagem
+Endpoint: POST /mensagem
 
 Exemplo de cURL:
 ```sh
-curl -X POST http://localhost:2026/itens \
+curl -X POST http://localhost:2026/mensagem \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 -d '{
-  "nome": "Novo Item",
+  "nome": "Novo Mensagem",
   "mensagem": "Este é um exemplo"
 }'
 ```
-### Atualizar Item
-Endpoint: PUT /itens/{id}
+### Atualizar Mensagem
+Endpoint: PUT /mensagem/{id}
 
 Exemplo de cURL:
 ```sh
-curl -X PUT http://localhost:2026/itens/uuid \
+curl -X PUT http://localhost:2026/mensagem/uuid \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 -d '{
-  "nome": "Item Atualizado",
+  "nome": "Mensagem Atualizado",
   "mensagem": "Conteúdo atualizado"
 }'
 ```
-### Obter Item por ID
-Endpoint: GET /itens/{id}
+### Obter Mensagem por ID
+Endpoint: GET /mensagem/{id}
 
 Exemplo de cURL:
 ```sh
-curl -X GET http://localhost:2026/itens/uuid
+curl -X GET http://localhost:2026/mensagem/uuid
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
-### Deletar Item
-Endpoint: DELETE /itens/{id}
+### Deletar Mensagem
+Endpoint: DELETE /mensagem/{id}
 
 Exemplo de cURL:
 ```sh
-curl -X DELETE http://localhost:2026/itens/uuid
+curl -X DELETE http://localhost:2026/mensagem/uuid
 -H "Authorization: Bearer SEU_TOKEN_AQUI" \
 ```
 ## Documentação da API

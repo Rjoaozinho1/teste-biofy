@@ -27,18 +27,18 @@ func NewApiServer(port string, storage storage.Storage) *APIServer {
 func (s *APIServer) Run() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/itens", auth.ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/mensagem", auth.ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			s.handleListaritens(w, r)
+			s.handleListarItens(w, r)
 		case "POST":
-			s.handleCriaitens(w, r)
+			s.handleCriaItens(w, r)
 		default:
 			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
 		}
 	}))
-	mux.HandleFunc("/itens/", auth.ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
-		id := r.URL.Path[len("/itens/"):]
+	mux.HandleFunc("/mensagem/", auth.ValidaJWTHandler(func(w http.ResponseWriter, r *http.Request) {
+		id := r.URL.Path[len("/mensagem/"):]
 		if id == "" {
 			http.Error(w, "ID necessario", http.StatusBadRequest)
 			return
@@ -68,7 +68,7 @@ func (s *APIServer) Run() {
 	}
 }
 
-func (s *APIServer) handleCriaitens(w http.ResponseWriter, r *http.Request) {
+func (s *APIServer) handleCriaItens(w http.ResponseWriter, r *http.Request) {
 	var item repo.Item
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		log.Println(err)
@@ -91,7 +91,7 @@ func (s *APIServer) handleCriaitens(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(item)
 }
 
-func (s *APIServer) handleListaritens(w http.ResponseWriter, _ *http.Request) {
+func (s *APIServer) handleListarItens(w http.ResponseWriter, _ *http.Request) {
 	itens, err := s.Storage.GetAllItens()
 	if err != nil {
 		http.Error(w, "Erro ao trazer todos os itens", http.StatusInternalServerError)

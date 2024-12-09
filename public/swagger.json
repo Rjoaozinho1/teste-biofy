@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API de Gerenciamento de Itens",
-    "description": "API para gerenciar itens com autenticação JWT",
+    "title": "API de Gerenciamento de Mensagens",
+    "description": "API para gerenciar mensagens com autenticação JWT",
     "version": "1.0.0"
   },
   "servers": [
@@ -57,13 +57,13 @@
         }
       }
     },
-    "/itens": {
+    "/mensagem": {
       "get": {
         "tags": [
-          "Itens"
+          "Mensagem"
         ],
-        "summary": "Listar todos os itens",
-        "description": "Retorna uma lista de todos os itens cadastrados",
+        "summary": "Listar todas as Mensagens",
+        "description": "Retorna uma lista de todos as mensagens cadastradas",
         "parameters": [
           {
             "name": "Authorization",
@@ -78,7 +78,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lista de itens",
+            "description": "Lista de mensagens",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,10 +109,10 @@
       },
       "post": {
         "tags": [
-          "Itens"
+          "Mensagem"
         ],
-        "summary": "Criar novo item",
-        "description": "Cria um novo item no sistema",
+        "summary": "Criar nova Mensagem",
+        "description": "Cria uma nova mensagem no sistema",
         "parameters": [
           {
             "name": "Authorization",
@@ -164,18 +164,18 @@
         ]
       }
     },
-    "/itens/{id}": {
+    "/mensagem/{id}": {
       "get": {
         "tags": [
-          "Itens"
+          "Mensagem"
         ],
-        "summary": "Buscar item por ID",
-        "description": "Retorna um item específico pelo ID",
+        "summary": "Buscar mensagem por ID",
+        "description": "Retorna uma mensagem específica pelo ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID do item",
+            "description": "ID da mensagem",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -197,7 +197,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Item encontrado",
+            "description": "Mensagem encontrado",
             "content": {
               "application/json": {
                 "schema": {
@@ -207,7 +207,7 @@
             }
           },
           "404": {
-            "description": "Item não encontrado",
+            "description": "Mensagem não encontrado",
             "content": {
               "application/json": {
                 "schema": {
@@ -225,15 +225,15 @@
       },
       "put": {
         "tags": [
-          "Itens"
+          "Mensagem"
         ],
-        "summary": "Atualizar item",
-        "description": "Atualiza um item existente",
+        "summary": "Atualizar Mensagem",
+        "description": "Atualiza uma mensagem existente",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID do item",
+            "description": "ID da mensagem",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -265,7 +265,7 @@
         },
         "responses": {
           "200": {
-            "description": "Item atualizado com sucesso",
+            "description": "Mensagem atualizado com sucesso",
             "content": {
               "application/json": {
                 "schema": {
@@ -275,7 +275,7 @@
             }
           },
           "404": {
-            "description": "Item não encontrado",
+            "description": "Mensagem não encontrado",
             "content": {
               "application/json": {
                 "schema": {
@@ -295,13 +295,13 @@
         "tags": [
           "Itens"
         ],
-        "summary": "Deletar item",
-        "description": "Remove um item do sistema",
+        "summary": "Deletar uma mensagem",
+        "description": "Remove uma mensagem do sistema",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID do item",
+            "description": "ID da mensagem",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -325,10 +325,10 @@
         ],
         "responses": {
           "204": {
-            "description": "Item deletado com sucesso"
+            "description": "Mensagem deletado com sucesso"
           },
           "404": {
-            "description": "Item não encontrado",
+            "description": "Mensagem não encontrado",
             "content": {
               "application/json": {
                 "schema": {
@@ -389,11 +389,11 @@
           },
           "nome": {
             "type": "string",
-            "example": "Mochila"
+            "example": "João"
           },
           "mensagem": {
             "type": "string",
-            "example": "Mochila incrível para carregar suas coisas"
+            "example": "Olá Mundo!"
           },
           "created_at": {
             "type": "string",
@@ -419,11 +419,11 @@
         "properties": {
           "nome": {
             "type": "string",
-            "example": "Mochila"
+            "example": "Joana"
           },
           "mensagem": {
             "type": "string",
-            "example": "Mochila incrível para carregar suas coisas"
+            "example": "Hello World!"
           }
         }
       }
