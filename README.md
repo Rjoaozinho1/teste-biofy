@@ -37,7 +37,7 @@ para Windows e macOS.
 
 ### Linux
 
-Pode instalar os binarios do [Docker Compose](https://github.com/docker/compose/releases)
+Pode instalar os binarios do [Docker Compose](https://github.com/docker/compose)
 
 Renomeando o binario para `docker-compose` e copiando o `$HOME/.docker/cli-plugins` 
 
