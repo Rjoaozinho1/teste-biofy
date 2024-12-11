@@ -60,6 +60,12 @@ func (s *APIServer) Run() {
 		}
 		s.handleLogin(w, r)
 	})
+	mux.HandleFunc("/validate-token", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
+		}
+		s.handleValidaToken(w, r)
+	})
 	mux.Handle("/", http.FileServer(http.Dir("../app/public")))
 
 	log.Printf("Servidor iniciado na porta %s...", s.Port)
@@ -124,12 +130,18 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 		http.Error(w, "Campo de nome e mensagem são obrigatorios", http.StatusBadRequest)
 		return
 	}
+	item, err := s.Storage.GetItem(id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Erro ao achar o item no banco de dados", http.StatusInternalServerError)
+		return
+	}
 	if err := s.Storage.UpdateItem(id, item); err != nil {
 		log.Println(err)
 		http.Error(w, "Erro ao atualizar o item", http.StatusInternalServerError)
 		return
 	}
-	item, err := s.Storage.GetItem(id)
+	item2, err := s.Storage.GetItem(id)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Erro ao recuperar o item atualizado", http.StatusInternalServerError)
@@ -137,7 +149,7 @@ func (s *APIServer) handleAtualizaItem(w http.ResponseWriter, r *http.Request, i
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(item)
+	json.NewEncoder(w).Encode(item2)
 }
 
 func (s *APIServer) handleDeletaItem(w http.ResponseWriter, _ *http.Request, id string) {
@@ -168,4 +180,29 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
+}
+
+func (s *APIServer) handleValidaToken(w http.ResponseWriter, r *http.Request) {
+	authHeader := r.Header.Get("Authorization")
+	// log.Println(authHeader)
+	if authHeader == "" {
+		http.Error(w, "Token não fornecido", http.StatusUnauthorized)
+		return
+	}
+	// Remove o prefixo "Bearer " do cabeçalho, se presente
+	token := authHeader
+	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+		token = authHeader[7:]
+	}
+	// Valida o token
+	_, err := auth.ValidaJWTToken(token)
+	if err != nil {
+		log.Println("Erro ao validar o token:", err)
+		http.Error(w, "Token inválido", http.StatusUnauthorized)
+		return
+	}
+	// Se o token for válido, retorna um status 200 com uma mensagem de sucesso
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Token válido"})
 }
