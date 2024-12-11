@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Mensagens</title>
+    <script src="./js/home.js"></script>
+    <style>
+        .item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 
 <body>
@@ -75,160 +84,6 @@
         <button type="submit">Deletar</button>
         <div id="itemDeletado" style="margin-top: 20px"></div>
     </form>
-
-    <script>
-        const API_URL = 'http://localhost:2026/mensagem'
-
-        async function tempalteRequisicao(url, opcoes = {}) {
-            const token = localStorage.getItem('authToken')
-            if (!token) {
-                logout()
-                return
-            }
-
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-
-            try {
-                const response = await fetch(url, {
-                    ...opcoes,
-                    headers
-                })
-
-                if (response.status === 401) {
-                    logout()
-                    return
-                }
-
-                resetInatividade()
-                return response
-            } catch (error) {
-                console.error('Erro na requisição:', error)
-                return null
-            }
-        }
-
-        async function criarItem(event) {
-            event.preventDefault()
-            const form = document.getElementById('createForm')
-            const formData = new FormData(form)
-            const data = Object.fromEntries(formData.entries())
-
-            const response = await tempalteRequisicao(API_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
-
-            if (response) {
-                const resultado = await response.json()
-                document.getElementById('itemCriado').textContent = 'Mensagem criado com sucesso!'
-                form.reset()
-                listarItens()
-            }
-        }
-
-        async function listarItens() {
-            const response = await tempalteRequisicao(API_URL)
-            if (response) {
-                const itens = await response.json()
-                const listaHTML = itens.map(item => `
-            <div style="margin: 10px 0 padding: 10px border: 1px solid #ccc">
-                <p>ID: ${item.session_id}</p>
-                <p>Nome: ${item.nome}</p>
-                <p>Mensagem: ${item.mensagem}</p>
-                <p>Created_at: ${item.created_at}</p>
-            </div>
-        `).join('')
-                document.getElementById('itensListador').innerHTML = listaHTML
-            }
-        }
-
-        async function detalheItem(event) {
-            event.preventDefault()
-            const id = document.getElementById('detalheId').value
-
-            const response = await tempalteRequisicao(`${API_URL}/${id}`)
-            if (response) {
-                const item = await response.json()
-                document.getElementById('itemDetalhe').innerHTML = `
-            <div style="margin: 10px 0 padding: 10px border: 1px solid #ccc">
-                <p>ID: ${item.session_id}</p>
-                <p>Nome: ${item.nome}</p>
-                <p>Mensagem: ${item.mensagem}</p>
-                <p>Created_at: ${item.created_at}</p>
-            </div>
-            `
-            }
-        }
-
-        async function atualizarItem(event) {
-            event.preventDefault()
-            const id = document.getElementById('atualizarId').value
-            const form = document.getElementById('updateForm')
-            const formData = new FormData(form)
-            const data = Object.fromEntries(formData.entries())
-
-            const response = await tempalteRequisicao(`${API_URL}/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(data)
-            })
-
-            if (response) {
-                document.getElementById('itemAtualizado').textContent = 'Mensagem atualizado com sucesso!'
-                form.reset()
-                listarItens()
-            }
-        }
-
-        async function deletarItem(event) {
-            event.preventDefault()
-            const id = document.getElementById('deletarId').value
-
-            const response = await tempalteRequisicao(`${API_URL}/${id}`, {
-                method: 'DELETE'
-            })
-
-            if (response) {
-                document.getElementById('itemDeletado').textContent = 'Mensagem deletado com sucesso!'
-                document.getElementById('deleteForm').reset()
-                listarItens()
-            }
-        }
-    </script>
-
-    <script>
-        let timeoutId
-        const inatividadeLimite = 5 * 60 * 1000
-
-        function logout() {
-            localStorage.removeItem('authToken')
-            window.location.href = '/index.html'
-        }
-
-        function resetInatividade() {
-            clearTimeout(timeoutId)
-            timeoutId = setTimeout(logout, inatividadeLimite)
-        }
-
-        function iniciarMonitoramentoInatividade() {
-            const eventos = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
-            eventos.forEach(evento => {
-                document.addEventListener(evento, resetInatividade)
-            })
-            resetInatividade()
-        }
-
-        window.onload = function () {
-            const token = localStorage.getItem('authToken')
-            if (!token) {
-                logout()
-            } else {
-                iniciarMonitoramentoInatividade()
-            }
-        }
-    </script>
 
 </body>
 

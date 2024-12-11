@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/index.js" defer></script>
     <title>Login</title>
 </head>
 
@@ -22,39 +23,6 @@
         <br>
         <button type="submit">Login</button>
     </form>
-
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-            const email = event.target.email.value;
-            const senha = event.target.senha.value;
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, senha })
-                });
-                if (!response.ok) {
-                    alert("Erro ao fazer login. Verifique suas credenciais.");
-                    return;
-                }
-                const data = await response.json();
-                localStorage.setItem('authToken', data.token);
-                window.location.href = '/home.html';
-            } catch (error) {
-                console.error("Erro ao fazer login:", error);
-                alert("Ocorreu um erro. Tente novamente mais tarde.");
-            }
-        });
-        window.onload = function () {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                window.location.href = '/home.html';
-            }
-        }
-    </script>
 </body>
 
 </html>
