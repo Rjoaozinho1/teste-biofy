@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -27,12 +28,17 @@ func CriaJWTToken(user *repo.ReqLogin) (string, error) {
 }
 
 func ValidaJWTToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("método de assinatura inesperado: %v", token.Header["alg"])
 		}
 		return secret, nil
 	})
+	// Verifica se houve erro ou se o token não é válido
+	if err != nil || !token.Valid {
+		return nil, errors.New("token inválido ou expirado")
+	}
+	return token, nil
 }
 
 func ValidaJWTHandler(next http.HandlerFunc) http.HandlerFunc {
